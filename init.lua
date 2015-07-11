@@ -94,7 +94,10 @@ travelnet.restore_data = function()
    local file = io.open( path, "r" );
    if( file ) then
       local data = file:read("*all");
-      travelnet.targets = minetest.deserialize( data );
+      local targets = minetest.deserialize( data );
+      if targets then
+          travelnet.targets = targets;
+      end
       file:close();
    else
       print("[Mod travelnet] Error: Savefile '"..tostring( path ).."' not found.");
@@ -665,18 +668,22 @@ end
 
 
 if( travelnet.travelnet_enabled ) then
-   dofile(minetest.get_modpath("travelnet").."/travelnet.lua"); -- the travelnet node definition
+    dofile(minetest.get_modpath("travelnet").."/travelnet.lua"); -- the travelnet node definition
 end
 if( travelnet.elevator_enabled ) then
-   dofile(minetest.get_modpath("travelnet").."/elevator.lua");  -- allows up/down transfers only
+    dofile(minetest.get_modpath("travelnet").."/elevator.lua");  -- allows up/down transfers only
 end
 if( travelnet.doors_enabled ) then
-   dofile(minetest.get_modpath("travelnet").."/doors.lua");     -- doors that open and close automaticly when the travelnet or elevator is used
+    dofile(minetest.get_modpath("travelnet").."/doors.lua");     -- doors that open and close automaticly when the travelnet or elevator is used
 end
 
 if( travelnet.abm_enabled ) then
-   dofile(minetest.get_modpath("travelnet").."/restore_network_via_abm.lua"); -- restore travelnet data when players pass by broken networks
+    dofile(minetest.get_modpath("travelnet").."/restore_network_via_abm.lua"); -- restore travelnet data when players pass by broken networks
 end
+
+--if travelnet.tools_enabled then
+dofile(minetest.get_modpath("travelnet").."/tools.lua") -- basic tool to edit travelnet meta
+--end
 
 -- upon server start, read the savefile
 travelnet.restore_data();
